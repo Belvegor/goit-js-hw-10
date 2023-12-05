@@ -1,0 +1,21 @@
+.cat-info {
+    overflow: hidden; 
+  }
+  
+  .cat-info img {
+    max-width: 85%; 
+    float: left; 
+    margin-right: 20px; 
+    max-height: 100vh;
+    margin-top: 20px;
+  }
+  
+  .cat-description {
+    float: left; 
+    max-width: 50%; 
+  }
+   p {
+    font-size: 25px;
+  font-weight: bold;
+
+  }
