@@ -12,6 +12,7 @@ export const fetchBreeds = () => {
       }));
     })
     .catch(error => {
+      console.error('Error fetching cat breeds:', error);
       throw error;
     });
 };
@@ -29,50 +30,53 @@ export const fetchCatByBreed = (breedId) => {
 
 const breedSelect = document.querySelector('.breed-select');
 const catInfoDiv = document.querySelector('.cat-info');
+const loader = document.querySelector('.loader');
+const errorDiv = document.querySelector('.error');
 
 const populateBreeds = () => {
-  breedSelect.style.display = 'none';
-  catInfoDiv.style.display = 'none';
-  document.querySelector('.loader').style.display = 'block';
-  document.querySelector('.error').style.display = 'none';
+  loader.style.display = 'block';
+  errorDiv.style.display = 'none';
 
   fetchBreeds()
     .then(breeds => {
-      breedSelect.style.display = 'block';
-      document.querySelector('.loader').style.display = 'none';
       breeds.forEach(breed => {
         breedSelect.innerHTML += `<option value="${breed.id}">${breed.name}</option>`;
       });
       new SlimSelect('.breed-select');
+      errorDiv.style.display = 'none'; // Ukrycie komunikatu błędu
     })
     .catch(error => {
-      breedSelect.style.display = 'none';
-      document.querySelector('.loader').style.display = 'none';
-      document.querySelector('.error').style.display = 'block';
-      console.error('Błąd podczas pobierania ras kotów:', error);
+      errorDiv.style.display = 'block'; // Wyświetlenie komunikatu błędu
+      console.error('Error fetching cat breeds:', error);
+    })
+    .finally(() => {
+      loader.style.display = 'none';
     });
 };
 
 const displayCatInfo = (breedId) => {
-  catInfoDiv.style.display = 'none';
-  document.querySelector('.loader').style.display = 'block';
+  loader.style.display = 'block';
+  errorDiv.style.display = 'none';
 
   fetchCatByBreed(breedId)
     .then(cat => {
-      catInfoDiv.style.display = 'block';
-      document.querySelector('.loader').style.display = 'none';
       catInfoDiv.innerHTML = `
         <img src="${cat.url}" alt="${cat.breeds[0].name}" />
         <p>Nazwa rasy: ${cat.breeds[0].name}</p>
         <p>Opis: ${cat.breeds[0].description}</p>
         <p>Temperament: ${cat.breeds[0].temperament}</p>
       `;
+      catInfoDiv.style.display = 'block'; // Wyświetlenie informacji o kocie
+      errorDiv.style.display = 'none'; // Ukrycie komunikatu błędu
     })
     .catch(error => {
       catInfoDiv.style.display = 'none';
-      document.querySelector('.loader').style.display = 'none';
-      document.querySelector('.error').style.display = 'block';
-      console.error('Błąd podczas pobierania informacji o kocie:', error);
+      breedSelect.style.display = 'block'; // Zmiana na block, aby select był widoczny
+      errorDiv.style.display = 'block'; // Wyświetlenie komunikatu błędu
+      console.error('Error fetching cat info:', error);
+    })
+    .finally(() => {
+      loader.style.display = 'none';
     });
 };
 
