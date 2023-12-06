@@ -20,23 +20,21 @@ export const fetchCatByBreed = (breedId) => {
   const url = `https://api.thecatapi.com/v1/images/search?breed_ids=${breedId}`;
   return axios.get(url)
     .then(response => {
-      return response.data[0]; 
+      return response.data[0];
     })
     .catch(error => {
       throw error;
     });
 };
 
-// pobiera referencję do selecta i diva, wyświetla informacje o kocie
 const breedSelect = document.querySelector('.breed-select');
 const catInfoDiv = document.querySelector('.cat-info');
 
-// wypełnienia selecta rasami kotów
 const populateBreeds = () => {
   breedSelect.style.display = 'none';
   catInfoDiv.style.display = 'none';
   document.querySelector('.loader').style.display = 'block';
-  document.querySelector('.error').style.display = 'none'; 
+  document.querySelector('.error').style.display = 'none';
 
   fetchBreeds()
     .then(breeds => {
@@ -50,24 +48,18 @@ const populateBreeds = () => {
     .catch(error => {
       breedSelect.style.display = 'none';
       document.querySelector('.loader').style.display = 'none';
-      document.querySelector('.error').style.display = 'block'; 
+      document.querySelector('.error').style.display = 'block';
       console.error('Błąd podczas pobierania ras kotów:', error);
     });
 };
 
-
 const displayCatInfo = (breedId) => {
   catInfoDiv.style.display = 'none';
-  breedSelect.style.display = 'none';
   document.querySelector('.loader').style.display = 'block';
-  document.querySelector('.error').style.display = 'none'; 
 
-
-  
   fetchCatByBreed(breedId)
     .then(cat => {
       catInfoDiv.style.display = 'block';
-      breedSelect.style.display = 'block';
       document.querySelector('.loader').style.display = 'none';
       catInfoDiv.innerHTML = `
         <img src="${cat.url}" alt="${cat.breeds[0].name}" />
@@ -78,18 +70,15 @@ const displayCatInfo = (breedId) => {
     })
     .catch(error => {
       catInfoDiv.style.display = 'none';
-      breedSelect.style.display = 'none';
       document.querySelector('.loader').style.display = 'none';
-      document.querySelector('.error').style.display = 'block'; 
+      document.querySelector('.error').style.display = 'block';
       console.error('Błąd podczas pobierania informacji o kocie:', error);
     });
 };
-
 
 breedSelect.addEventListener('change', (event) => {
   const selectedBreedId = event.target.value;
   displayCatInfo(selectedBreedId);
 });
-
 
 populateBreeds();

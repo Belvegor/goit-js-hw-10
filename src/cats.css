@@ -19,3 +19,11 @@
   font-weight: bold;
 
   }
+
+  .hidden {
+    display: none;
+  }
+
+  .breed-select {
+    font-size: 35px;
+  }
